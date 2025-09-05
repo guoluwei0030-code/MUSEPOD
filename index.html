@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MUSEPOD Meeting Rooms</title>
+  <title>MUSEPoD Meeting Rooms</title>
   <!-- 引入 Tailwind CSS -->
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   <!-- 引入 Font Awesome -->
@@ -15,14 +15,14 @@
       --color-light: #4A4A5F;    /* 右侧浅色背景 */
       --color-accent: #4F9BFF;   /* 强调色（蓝色） */
       --color-overlay: rgba(0, 0, 0, 0.7); /* 模态框背景 */
-      --font-inter: 'Inter', sans-serif;
+      --font-sans: 'Helvetica Neue', Arial, sans-serif; /* 匹配参考字体 */
     }
     @utility smooth-transition {
       transition: all 0.3s ease-in-out;
     }
     body {
-      font-family: var(--font-inter);
-      background-color: #1A202C;
+      font-family: var(--font-sans);
+      background-color: #1A202C; /* 匹配参考图深蓝色背景 */
       color: white;
       overflow-x: hidden;
     }
@@ -99,24 +99,55 @@
       justify-content: center;
       align-items: center;
       padding: 2rem;
+      text-align: center;
     }
     .home-title {
-      letter-spacing: 0.5rem; /* 加大字间距 */
-      margin-bottom: 2rem;
+      letter-spacing: 0.35rem; /* 精确匹配参考图间距 */
+      margin-bottom: 3rem;
       cursor: pointer;
       transition: transform 0.3s ease;
+      line-height: 1; /* 确保字母基线对齐 */
+      display: inline-block; /* 保持行内元素特性 */
+      font-weight: 500; /* 匹配参考图字重 */
     }
     .home-title:hover {
       transform: scale(1.05);
     }
     .home-subtitle {
       letter-spacing: 0.2rem;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.3s ease;
+      margin-bottom: 4rem;
+      font-weight: 300;
     }
-    .home-subtitle:hover {
-      transform: scale(1.05);
+    .home-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .home-link {
+      color: var(--color-accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 0.5rem 1rem;
+    }
+    .home-link:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
+    .home-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--color-accent);
+      transition: width 0.3s ease;
+    }
+    .home-link:hover::after {
+      width: 100%;
     }
   </style>
 </head>
@@ -124,95 +155,108 @@
   <!-- 主页面 -->
   <div id="homePage" class="page active">
     <div class="home-container">
-      <!-- 仅保留文字，MUSEPoD 中的 O 为小写，加大字间距 -->
-      <h1 class="home-title text-6xl md:text-8xl font-bold">MUSEPoD</h1>
-      <p class="home-subtitle text-2xl md:text-3xl" onclick="navigateTo('meetingRoomPage')">ENJOY YOUR MEETINGS</p>
+      <!-- MUSEPoD 标题（o为小写，垂直居中匹配参考图） -->
+      <h1 class="home-title text-7xl md:text-10xl font-bold">MUSEPoD</h1>
+      <p class="home-subtitle text-2xl md:text-3xl">ENJOY YOUR MEETINGS</p>
+      
+      <!-- 三个功能链接 -->
+      <div class="home-links">
+        <div class="home-link" onclick="navigateTo('meetingRoomPage')">
+          <i class="fas fa-calendar-alt mr-2"></i>Meeting Schedule
+        </div>
+        <div class="home-link" onclick="showBookingFeature()">
+          <i class="fas fa-bookmark mr-2"></i>Meeting Booking
+        </div>
+        <div class="home-link" onclick="showFindRoomFeature()">
+          <i class="fas fa-search mr-2"></i>Find Room
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- 会议室页面 -->
   <div id="meetingRoomPage" class="page">
-    <div class="flex flex-col md:flex-row p-4 lg:p-6 max-w-7xl mx-auto h-full">
+    <div class="flex flex-col md:flex-row p-6 lg:p-10 max-w-7xl mx-auto h-full">
       <!-- 左侧面板：当前会议信息 -->
-      <div class="w-full md:w-1/2 bg-darker p-6 rounded-lg mb-6 md:mb-0 md:rounded-l-lg">
+      <div class="w-full md:w-1/2 bg-darker p-8 rounded-lg mb-8 md:mb-0 md:rounded-l-lg">
         <!-- 返回箭头 + 时间 -->
-        <div class="flex items-center mb-4">
-          <i class="fas fa-arrow-left text-accent mr-2 back-arrow" onclick="navigateTo('homePage')"></i>
-          <span class="text-lg font-semibold">10:00 AM</span>
+        <div class="flex items-center mb-6">
+          <i class="fas fa-arrow-left text-accent mr-3 back-arrow text-xl" onclick="navigateTo('homePage')"></i>
+          <span class="text-xl font-semibold">10:00 AM</span>
         </div>
-        <h1 class="text-2xl font-bold mb-6">Conference Room 1</h1>
+        <h1 class="text-3xl font-bold mb-8">Conference Room 1</h1>
         
         <!-- 会议状态 + 时间 + 主题 -->
-        <div class="mb-8">
-          <span class="text-accent text-lg font-medium">Occupied</span>
-          <h2 class="text-4xl font-bold mt-4">10:00 <span class="text-xl">AM</span></h2>
-          <p class="text-gray-400 mt-2">August 20, 2025</p>
-          <hr class="border-yellow-400 my-6">
-          <h3 class="text-2xl font-semibold">Q3 Marketing Strategy Session</h3>
+        <div class="mb-10">
+          <span class="text-accent text-xl font-medium">Occupied</span>
+          <h2 class="text-5xl font-bold mt-6">10:00 <span class="text-2xl">AM</span></h2>
+          <p class="text-gray-400 mt-3 text-lg">August 20, 2025</p>
+          <hr class="border-yellow-400 my-8">
+          <h3 class="text-3xl font-semibold">Q3 Marketing Strategy Session</h3>
         </div>
         
         <!-- 参会者信息 -->
-        <div class="mb-6">
-          <div class="flex items-center mb-3">
-            <i class="fas fa-user-circle text-gray-400 mr-3"></i>
+        <div class="mb-8">
+          <div class="flex items-center mb-4">
+            <i class="fas fa-user-circle text-gray-400 mr-4 text-xl"></i>
             <div>
-              <p class="font-medium">Presenter: Samantha Lee</p>
-              <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
+              <p class="font-medium text-lg">Presenter: Samantha Lee</p>
+              <p class="text-gray-400">9:00 - 11:00 AM</p>
             </div>
           </div>
           <div class="flex items-center">
-            <i class="fas fa-user-circle text-gray-400 mr-3"></i>
+            <i class="fas fa-user-circle text-gray-400 mr-4 text-xl"></i>
             <div>
-              <p class="font-medium">John Chen</p>
-              <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
+              <p class="font-medium text-lg">John Chen</p>
+              <p class="text-gray-400">9:00 - 11:00 AM</p>
             </div>
           </div>
         </div>
         
         <!-- QR 码 -->
-        <div class="bg-white/10 p-4 rounded-lg text-center">
+        <div class="bg-white/10 p-6 rounded-lg text-center">
           <img 
-            src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=checkin_extend_conference1" 
+            src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=checkin_extend_conference1" 
             alt="QR Code for check-in or extend meeting" 
-            class="qr-code mx-auto mb-2"
+            class="qr-code mx-auto mb-3"
           >
-          <p class="text-sm text-gray-300">Scan to check-in or extend</p>
+          <p class="text-gray-300">Scan to check-in or extend</p>
         </div>
       </div>
       
       <!-- 右侧面板：今日日程 -->
-      <div class="w-full md:w-1/2 bg-light p-6 rounded-lg md:rounded-r-lg">
-        <h2 class="text-2xl font-bold mb-6">Today's Schedule</h2>
+      <div class="w-full md:w-1/2 bg-light p-8 rounded-lg md:rounded-r-lg">
+        <h2 class="text-3xl font-bold mb-8">Today's Schedule</h2>
         
-        <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+        <div class="space-y-5 max-h-[65vh] overflow-y-auto pr-2">
           <!-- 日程项 1：Project Alpha Review -->
-          <div class="schedule-item active p-3 rounded-lg" data-event="project-alpha">
-            <h3 class="font-semibold">Project Alpha Review</h3>
-            <p class="text-gray-300 text-sm">11:00 AM - 12:00 PM</p>
+          <div class="schedule-item active p-4 rounded-lg" data-event="project-alpha">
+            <h3 class="font-semibold text-xl">Project Alpha Review</h3>
+            <p class="text-gray-300">11:00 AM - 12:00 PM</p>
           </div>
           
           <!-- 日程项 2：Client Pitch Prep -->
-          <div class="schedule-item p-3 rounded-lg" data-event="client-pitch">
-            <h3 class="font-semibold">Client Pitch Prep</h3>
-            <p class="text-gray-300 text-sm">1:00 PM - 2:00 PM - Sarah Kim</p>
+          <div class="schedule-item p-4 rounded-lg" data-event="client-pitch">
+            <h3 class="font-semibold text-xl">Client Pitch Prep</h3>
+            <p class="text-gray-300">1:00 PM - 2:00 PM - Sarah Kim</p>
           </div>
           
           <!-- 日程项 3：Team Sync Up -->
-          <div class="schedule-item p-3 rounded-lg" data-event="team-sync">
-            <h3 class="font-semibold">Team Sync Up</h3>
-            <p class="text-gray-300 text-sm">2:30 PM - Michael Wu</p>
+          <div class="schedule-item p-4 rounded-lg" data-event="team-sync">
+            <h3 class="font-semibold text-xl">Team Sync Up</h3>
+            <p class="text-gray-300">2:30 PM - Michael Wu</p>
           </div>
           
           <!-- 日程项 4：Future Initiatives -->
-          <div class="schedule-item p-3 rounded-lg" data-event="future-initiatives">
-            <h3 class="font-semibold">Future Initiatives</h3>
-            <p class="text-gray-300 text-sm">4:00 PM - 5:00 PM</p>
+          <div class="schedule-item p-4 rounded-lg" data-event="future-initiatives">
+            <h3 class="font-semibold text-xl">Future Initiatives</h3>
+            <p class="text-gray-300">4:00 PM - 5:00 PM</p>
           </div>
           
           <!-- 日程项 5：Sales Training -->
-          <div class="schedule-item p-3 rounded-lg" data-event="sales-training">
-            <h3 class="font-semibold">Sales Training</h3>
-            <p class="text-gray-300 text-sm">6:30 PM - 7:00 PM</p>
+          <div class="schedule-item p-4 rounded-lg" data-event="sales-training">
+            <h3 class="font-semibold text-xl">Sales Training</h3>
+            <p class="text-gray-300">6:30 PM - 7:00 PM</p>
           </div>
         </div>
       </div>
@@ -354,6 +398,16 @@
       // 关闭可能打开的模态框
       document.getElementById('eventModal').classList.remove('active');
       document.body.style.overflow = '';
+    }
+
+    // 显示预订功能（示例）
+    function showBookingFeature() {
+      alert('Meeting booking feature will be available soon!');
+    }
+
+    // 显示找房间功能（示例）
+    function showFindRoomFeature() {
+      alert('Room finding feature will be available soon!');
     }
 
     document.addEventListener('DOMContentLoaded', () => {

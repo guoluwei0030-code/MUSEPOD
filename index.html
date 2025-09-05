@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Conference Room 1</title>
-  <!-- 引入 Tailwind CSS（浏览器版） -->
+  <title>MUSEPOD Meeting Rooms</title>
+  <!-- 引入 Tailwind CSS -->
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-  <!-- 引入 Font Awesome（图标库） -->
+  <!-- 引入 Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
   <style type="text/tailwindcss">
     @theme {
@@ -14,148 +14,434 @@
       --color-darker: #12121F;   /* 左侧更深色区域 */
       --color-light: #4A4A5F;    /* 右侧浅色背景 */
       --color-accent: #4F9BFF;   /* 强调色（蓝色） */
-      --font-inter: 'Inter', sans-serif; /* 字体（可替换为实际字体） */
+      --color-overlay: rgba(0, 0, 0, 0.7); /* 模态框背景 */
+      --font-inter: 'Inter', sans-serif;
     }
     @utility smooth-transition {
       transition: all 0.3s ease-in-out;
     }
     body {
       font-family: var(--font-inter);
-      background-color: var(--color-dark);
+      background-color: #1A202C;
       color: white;
+      overflow-x: hidden;
     }
-    /* 日程项样式：默认左边框透明，激活时显示蓝色 */
+    /* 页面容器样式 */
+    .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease-in-out;
+      transform: translateX(20px);
+    }
+    .page.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+    /* 日程项样式 */
     .schedule-item {
       border-left: 3px solid transparent;
+      cursor: pointer;
     }
     .schedule-item.active {
       border-left-color: var(--color-accent);
     }
-    /* 日程项 hover 效果 */
     .schedule-item:hover {
       background-color: rgba(255, 255, 255, 0.05);
       @apply smooth-transition;
     }
-    /* QR 码 hover 缩放效果 */
+    /* QR 码效果 */
     .qr-code:hover {
       transform: scale(1.05);
       @apply smooth-transition;
     }
+    /* 箭头图标交互 */
+    .back-arrow {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .back-arrow:hover {
+      transform: translateX(-3px);
+    }
+    /* 模态框样式 */
+    .modal {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      transform: translateY(-20px);
+    }
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-accent);
+      border-radius: 3px;
+    }
+    /* 主页面样式 */
+    .home-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    .home-title {
+      letter-spacing: 0.5rem; /* 加大字间距 */
+      margin-bottom: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .home-title:hover {
+      transform: scale(1.05);
+    }
+    .home-subtitle {
+      letter-spacing: 0.2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .home-subtitle:hover {
+      transform: scale(1.05);
+    }
   </style>
 </head>
-<body class="min-h-screen">
-  <div class="flex flex-col md:flex-row p-4">
-    <!-- 左侧面板：当前会议信息 -->
-    <div class="w-full md:w-1/2 bg-darker p-6 rounded-lg mb-6 md:mb-0 md:rounded-l-lg">
-      <!-- 返回箭头 + 时间 -->
-      <div class="flex items-center mb-4">
-        <i class="fas fa-arrow-left text-accent mr-2"></i>
-        <span class="text-lg font-semibold">10:00 AM</span>
-      </div>
-      <h1 class="text-2xl font-bold mb-6">Conference Room 1</h1>
-      
-      <!-- 会议状态 + 时间 + 主题 -->
-      <div class="mb-8">
-        <span class="text-accent text-lg font-medium">Occupied</span>
-        <h2 class="text-4xl font-bold mt-4">10:00 <span class="text-xl">AM</span></h2>
-        <p class="text-gray-400 mt-2">August 20, 2025</p>
-        <hr class="border-yellow-400 my-6">
-        <h3 class="text-2xl font-semibold">Q3 Marketing Strategy Session</h3>
-      </div>
-      
-      <!-- 参会者信息 -->
-      <div class="mb-6">
-        <div class="flex items-center mb-3">
-          <i class="fas fa-user-circle text-gray-400 mr-3"></i>
-          <div>
-            <p class="font-medium">Presenter: Samantha Lee</p>
-            <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
+<body>
+  <!-- 主页面 -->
+  <div id="homePage" class="page active">
+    <div class="home-container">
+      <!-- 仅保留文字，MUSEPoD 中的 O 为小写，加大字间距 -->
+      <h1 class="home-title text-6xl md:text-8xl font-bold">MUSEPoD</h1>
+      <p class="home-subtitle text-2xl md:text-3xl" onclick="navigateTo('meetingRoomPage')">ENJOY YOUR MEETINGS</p>
+    </div>
+  </div>
+
+  <!-- 会议室页面 -->
+  <div id="meetingRoomPage" class="page">
+    <div class="flex flex-col md:flex-row p-4 lg:p-6 max-w-7xl mx-auto h-full">
+      <!-- 左侧面板：当前会议信息 -->
+      <div class="w-full md:w-1/2 bg-darker p-6 rounded-lg mb-6 md:mb-0 md:rounded-l-lg">
+        <!-- 返回箭头 + 时间 -->
+        <div class="flex items-center mb-4">
+          <i class="fas fa-arrow-left text-accent mr-2 back-arrow" onclick="navigateTo('homePage')"></i>
+          <span class="text-lg font-semibold">10:00 AM</span>
+        </div>
+        <h1 class="text-2xl font-bold mb-6">Conference Room 1</h1>
+        
+        <!-- 会议状态 + 时间 + 主题 -->
+        <div class="mb-8">
+          <span class="text-accent text-lg font-medium">Occupied</span>
+          <h2 class="text-4xl font-bold mt-4">10:00 <span class="text-xl">AM</span></h2>
+          <p class="text-gray-400 mt-2">August 20, 2025</p>
+          <hr class="border-yellow-400 my-6">
+          <h3 class="text-2xl font-semibold">Q3 Marketing Strategy Session</h3>
+        </div>
+        
+        <!-- 参会者信息 -->
+        <div class="mb-6">
+          <div class="flex items-center mb-3">
+            <i class="fas fa-user-circle text-gray-400 mr-3"></i>
+            <div>
+              <p class="font-medium">Presenter: Samantha Lee</p>
+              <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <i class="fas fa-user-circle text-gray-400 mr-3"></i>
+            <div>
+              <p class="font-medium">John Chen</p>
+              <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
+            </div>
           </div>
         </div>
-        <div class="flex items-center">
-          <i class="fas fa-user-circle text-gray-400 mr-3"></i>
-          <div>
-            <p class="font-medium">John Chen</p>
-            <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
-          </div>
+        
+        <!-- QR 码 -->
+        <div class="bg-white/10 p-4 rounded-lg text-center">
+          <img 
+            src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=checkin_extend_conference1" 
+            alt="QR Code for check-in or extend meeting" 
+            class="qr-code mx-auto mb-2"
+          >
+          <p class="text-sm text-gray-300">Scan to check-in or extend</p>
         </div>
       </div>
       
-      <!-- QR 码（带交互效果） -->
-      <div class="bg-white/10 p-4 rounded-lg text-center">
-        <img 
-          src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=checkin_extend_conference1" 
-          alt="QR Code" 
-          class="qr-code mx-auto mb-2"
-        >
-        <p class="text-sm text-gray-300">Scan to check-in or extend</p>
+      <!-- 右侧面板：今日日程 -->
+      <div class="w-full md:w-1/2 bg-light p-6 rounded-lg md:rounded-r-lg">
+        <h2 class="text-2xl font-bold mb-6">Today's Schedule</h2>
+        
+        <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+          <!-- 日程项 1：Project Alpha Review -->
+          <div class="schedule-item active p-3 rounded-lg" data-event="project-alpha">
+            <h3 class="font-semibold">Project Alpha Review</h3>
+            <p class="text-gray-300 text-sm">11:00 AM - 12:00 PM</p>
+          </div>
+          
+          <!-- 日程项 2：Client Pitch Prep -->
+          <div class="schedule-item p-3 rounded-lg" data-event="client-pitch">
+            <h3 class="font-semibold">Client Pitch Prep</h3>
+            <p class="text-gray-300 text-sm">1:00 PM - 2:00 PM - Sarah Kim</p>
+          </div>
+          
+          <!-- 日程项 3：Team Sync Up -->
+          <div class="schedule-item p-3 rounded-lg" data-event="team-sync">
+            <h3 class="font-semibold">Team Sync Up</h3>
+            <p class="text-gray-300 text-sm">2:30 PM - Michael Wu</p>
+          </div>
+          
+          <!-- 日程项 4：Future Initiatives -->
+          <div class="schedule-item p-3 rounded-lg" data-event="future-initiatives">
+            <h3 class="font-semibold">Future Initiatives</h3>
+            <p class="text-gray-300 text-sm">4:00 PM - 5:00 PM</p>
+          </div>
+          
+          <!-- 日程项 5：Sales Training -->
+          <div class="schedule-item p-3 rounded-lg" data-event="sales-training">
+            <h3 class="font-semibold">Sales Training</h3>
+            <p class="text-gray-300 text-sm">6:30 PM - 7:00 PM</p>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <!-- 右侧面板：今日日程 -->
-    <div class="w-full md:w-1/2 bg-light p-6 rounded-lg md:rounded-r-lg">
-      <h2 class="text-2xl font-bold mb-6">Today's Schedule</h2>
+  </div>
+
+  <!-- 会议详情模态框 -->
+  <div class="modal fixed inset-0 z-50 flex items-center justify-center p-4" id="eventModal">
+    <div class="absolute inset-0 bg-overlay" id="modalOverlay"></div>
+    <div class="relative bg-darker rounded-lg w-full max-w-lg max-h-[80vh] overflow-y-auto p-6 shadow-xl">
+      <button class="absolute top-4 right-4 text-gray-400 hover:text-white" id="closeModal">
+        <i class="fas fa-times text-xl"></i>
+      </button>
       
-      <div class="space-y-4">
-        <!-- 日程项 1：Project Alpha Review -->
-        <div class="schedule-item active p-3 rounded-lg" data-event="project-alpha">
-          <h3 class="font-semibold">Project Alpha Review</h3>
-          <p class="text-gray-300 text-sm">11:00 AM - 12:00 PM</p>
+      <div class="modal-content">
+        <h2 class="text-2xl font-bold mb-4" id="modalTitle">Meeting Details</h2>
+        <div class="text-gray-400 mb-6" id="modalTime">Time</div>
+        
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-2">Attendees</h3>
+          <ul class="space-y-2" id="modalAttendees">
+            <!-- 参会者列表将通过JS动态填充 -->
+          </ul>
         </div>
         
-        <!-- 日程项 2：Client Pitch Prep -->
-        <div class="schedule-item p-3 rounded-lg" data-event="client-pitch">
-          <h3 class="font-semibold">Client Pitch Prep</h3>
-          <p class="text-gray-300 text-sm">1:00 PM - 2:00 PM - Sarah Kim</p>
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-2">Description</h3>
+          <p class="text-gray-300" id="modalDescription">Meeting description will appear here.</p>
         </div>
         
-        <!-- 日程项 3：Team Sync Up -->
-        <div class="schedule-item p-3 rounded-lg" data-event="team-sync">
-          <h3 class="font-semibold">Team Sync Up</h3>
-          <p class="text-gray-300 text-sm">2:30 PM - Michael Wu</p>
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-2">Materials</h3>
+          <ul class="space-y-2" id="modalMaterials">
+            <!-- 材料列表将通过JS动态填充 -->
+          </ul>
         </div>
         
-        <!-- 日程项 4：Future Initiatives -->
-        <div class="schedule-item p-3 rounded-lg" data-event="future-initiatives">
-          <h3 class="font-semibold">Future Initiatives</h3>
-          <p class="text-gray-300 text-sm">4:00 PM - 5:00 PM</p>
-        </div>
-        
-        <!-- 日程项 5：Sales Training -->
-        <div class="schedule-item active p-3 rounded-lg" data-event="sales-training">
-          <h3 class="font-semibold">Sales Training</h3>
-          <p class="text-gray-300 text-sm">6:30 PM - 7:00 PM</p>
+        <div class="flex justify-end gap-3">
+          <button class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 smooth-transition">
+            Edit
+          </button>
+          <button class="px-4 py-2 bg-accent rounded hover:bg-blue-600 smooth-transition">
+            Join Meeting
+          </button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    // 会议详情数据
+    const eventDetails = {
+      'project-alpha': {
+        title: 'Project Alpha Review',
+        time: '11:00 AM - 12:00 PM',
+        attendees: [
+          'David Wilson (Lead)',
+          'Emma Roberts',
+          'Thomas Brown',
+          'Olivia Garcia'
+        ],
+        description: 'Review progress on Project Alpha, discuss blockers, and finalize timeline for Q4 release. All team leads should prepare status updates.',
+        materials: [
+          'Project Alpha Status Report',
+          'Q4 Timeline Proposal',
+          'Risk Assessment Document'
+        ]
+      },
+      'client-pitch': {
+        title: 'Client Pitch Prep',
+        time: '1:00 PM - 2:00 PM',
+        attendees: [
+          'Sarah Kim (Presenter)',
+          'James Miller',
+          'Nancy Davis',
+          'Robert Chen'
+        ],
+        description: 'Final preparation for tomorrow\'s client presentation. We will review the slides, practice the demo, and assign speaking roles.',
+        materials: [
+          'Client Presentation Slides',
+          'Product Demo Script',
+          'FAQ Document'
+        ]
+      },
+      'team-sync': {
+        title: 'Team Sync Up',
+        time: '2:30 PM - 3:30 PM',
+        attendees: [
+          'Michael Wu (Facilitator)',
+          'All team members',
+          'Department heads'
+        ],
+        description: 'Weekly team synchronization meeting to align on priorities, share updates, and address any cross-functional issues.',
+        materials: [
+          'Weekly Progress Tracker',
+          'Action Items from Last Week',
+          'Upcoming Events Calendar'
+        ]
+      },
+      'future-initiatives': {
+        title: 'Future Initiatives',
+        time: '4:00 PM - 5:00 PM',
+        attendees: [
+          'Director: Lisa Johnson',
+          'Senior Managers',
+          'Innovation Team'
+        ],
+        description: 'Brainstorming session for new initiatives and projects for the next fiscal year. Please come prepared with 1-2 ideas to share.',
+        materials: [
+          'Current Initiative Status',
+          'Market Research Summary',
+          'Idea Submission Template'
+        ]
+      },
+      'sales-training': {
+        title: 'Sales Training',
+        time: '6:30 PM - 7:00 PM',
+        attendees: [
+          'All Sales Team Members',
+          'Product Specialists'
+        ],
+        description: 'Quick training session on new product features and sales techniques. Focus will be on addressing common customer objections.',
+        materials: [
+          'New Feature Guide',
+          'Sales Script Examples',
+          'Objection Handling Guide'
+        ]
+      }
+    };
+
+    // 页面导航功能
+    function navigateTo(pageId) {
+      // 隐藏所有页面
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      // 显示目标页面
+      document.getElementById(pageId).classList.add('active');
+      // 关闭可能打开的模态框
+      document.getElementById('eventModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. 日程项交互：点击切换“激活状态”
-      const scheduleItems = document.querySelectorAll('.schedule-item');
+      // 为主标题添加点击事件
+      document.querySelector('.home-title').addEventListener('click', () => {
+        navigateTo('meetingRoomPage');
+      });
       
+      // 元素引用
+      const scheduleItems = document.querySelectorAll('.schedule-item');
+      const eventModal = document.getElementById('eventModal');
+      const closeModal = document.getElementById('closeModal');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalTime = document.getElementById('modalTime');
+      const modalAttendees = document.getElementById('modalAttendees');
+      const modalDescription = document.getElementById('modalDescription');
+      const modalMaterials = document.getElementById('modalMaterials');
+
+      // 日程项选择与详情展示
       scheduleItems.forEach(item => {
         item.addEventListener('click', () => {
-          // 移除所有项的“激活”样式
+          // 更新激活状态
           scheduleItems.forEach(i => i.classList.remove('active'));
-          // 为点击的项添加“激活”样式
           item.classList.add('active');
           
-          // （可选）点击后可执行其他逻辑，如：显示详情、切换左侧会议内容等
+          // 获取并显示会议详情
           const eventId = item.dataset.event;
-          console.log(`Clicked event: ${eventId}`);
+          const details = eventDetails[eventId];
+          
+          if (details) {
+            modalTitle.textContent = details.title;
+            modalTime.textContent = details.time;
+            
+            // 填充参会者
+            modalAttendees.innerHTML = '';
+            details.attendees.forEach(attendee => {
+              const li = document.createElement('li');
+              li.className = 'flex items-center';
+              li.innerHTML = `<i class="fas fa-user-circle text-accent mr-2"></i> ${attendee}`;
+              modalAttendees.appendChild(li);
+            });
+            
+            // 填充描述
+            modalDescription.textContent = details.description;
+            
+            // 填充材料
+            modalMaterials.innerHTML = '';
+            details.materials.forEach(material => {
+              const li = document.createElement('li');
+              li.className = 'flex items-center';
+              li.innerHTML = `<i class="fas fa-file-text text-accent mr-2"></i> ${material}`;
+              modalMaterials.appendChild(li);
+            });
+            
+            // 显示模态框
+            eventModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+          }
         });
       });
-      
-      // 2. QR 码交互：hover 时缩放
+
+      // 关闭模态框
+      const closeModalHandler = () => {
+        eventModal.classList.remove('active');
+        document.body.style.overflow = ''; // 恢复背景滚动
+      };
+
+      closeModal.addEventListener('click', closeModalHandler);
+      modalOverlay.addEventListener('click', closeModalHandler);
+
+      // 按ESC键关闭模态框
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && eventModal.classList.contains('active')) {
+          closeModalHandler();
+        }
+      });
+
+      // QR码交互效果
       const qrCode = document.querySelector('.qr-code');
-      qrCode.addEventListener('mouseenter', () => {
-        qrCode.classList.add('scale-105');
-      });
-      qrCode.addEventListener('mouseleave', () => {
-        qrCode.classList.remove('scale-105');
-      });
+      if (qrCode) {
+        qrCode.addEventListener('mouseenter', () => {
+          qrCode.classList.add('scale-105');
+        });
+        qrCode.addEventListener('mouseleave', () => {
+          qrCode.classList.remove('scale-105');
+        });
+      }
     });
   </script>
 </body>

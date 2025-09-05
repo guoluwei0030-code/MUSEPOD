@@ -152,54 +152,100 @@
       background: var(--color-accent);
       border-radius: 3px;
     }
-    /* 主页面样式 - 图片满铺且选项避开文字 */
+    /* 主页面样式 - 移除背景图片，调整标题，添加魔方图标 */
     .home-container {
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between; /* 上下分布，避开中间文字 */
+      justify-content: center;
       align-items: center;
       padding: 2rem;
       text-align: center;
-      /* 背景图片满铺设置 */
-      background-image: url('https://link.bmwas.cn/vmini?c=vQLHVD');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
       position: relative;
-      z-index: 1;
     }
-    /* 背景遮罩，提高文字可读性 */
-    .home-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.3); /* 半透明遮罩，不影响图片但提高文字可读性 */
-      z-index: -1;
-    }
+    /* 标题样式调整 - 确保长短视觉一致，o字母居中 */
     .home-title {
-      letter-spacing: 0.35rem;
-      margin-top: 2rem;
+      letter-spacing: 0.25rem;
+      margin: 0 0 1rem 0;
       cursor: pointer;
       transition: transform 0.3s ease;
       line-height: 1;
-      font-weight: 500;
+      font-weight: 600;
       text-align: center;
-      width: 100%;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* 文字阴影，提高可读性 */
+      font-size: clamp(5rem, 15vw, 9rem);
+      position: relative;
     }
-    .home-title:hover {
-      transform: scale(1.05);
+    /* 特别调整字母o的位置，确保视觉居中 */
+    .home-title span.o-letter {
+      position: relative;
+      margin: 0 0.05em;
     }
     .home-subtitle {
-      letter-spacing: 0.2rem;
+      letter-spacing: 0.5rem;
       font-weight: 300;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      margin: 0 0 3rem 0;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      padding-left: 0.5rem; /* 补偿letter-spacing的视觉偏移 */
     }
-    /* 功能选项放在底部，避开中间图片文字 */
+    /* 魔方图标容器 */
+    .cube-container {
+      margin: 2rem 0 4rem 0;
+      perspective: 800px;
+    }
+    /* 现代简约风格魔方图标 */
+    .cube {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateX(45deg) rotateY(45deg);
+      animation: spin 8s infinite linear;
+    }
+    @keyframes spin {
+      0% { transform: rotateX(45deg) rotateY(45deg); }
+      100% { transform: rotateX(45deg) rotateY(405deg); }
+    }
+    .cube-face {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background-color: rgba(79, 155, 255, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    body.light-mode .cube-face {
+      background-color: rgba(79, 155, 255, 0.7);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    .cube-front { transform: translateZ(60px); }
+    .cube-back { transform: rotateY(180deg) translateZ(60px); }
+    .cube-right { transform: rotateY(90deg) translateZ(60px); }
+    .cube-left { transform: rotateY(-90deg) translateZ(60px); }
+    .cube-top { transform: rotateX(90deg) translateZ(60px); }
+    .cube-bottom { transform: rotateX(-90deg) translateZ(60px); }
+    /* 魔方上的小方块 */
+    .cube-dot {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .cube-front .cube-dot:nth-child(1) { top: 15px; left: 15px; }
+    .cube-front .cube-dot:nth-child(2) { top: 15px; right: 15px; }
+    .cube-front .cube-dot:nth-child(3) { bottom: 15px; left: 15px; }
+    .cube-front .cube-dot:nth-child(4) { bottom: 15px; right: 15px; }
+    
+    .cube-right .cube-dot:nth-child(1) { top: 15px; left: 15px; }
+    .cube-right .cube-dot:nth-child(2) { top: 15px; right: 15px; }
+    .cube-right .cube-dot:nth-child(3) { bottom: 15px; left: 15px; }
+    
+    .cube-top .cube-dot:nth-child(1) { top: 15px; right: 15px; }
+    .cube-top .cube-dot:nth-child(2) { bottom: 15px; left: 15px; }
+    .cube-top .cube-dot:nth-child(3) { bottom: 15px; right: 15px; }
+
+    /* 功能选项样式 */
     .home-links-container {
       width: 100%;
       padding: 2rem 0;
@@ -222,9 +268,13 @@
       padding: 0.8rem 1.5rem;
       display: flex;
       align-items: center;
-      background-color: rgba(0, 0, 0, 0.4); /* 半透明背景，提高可读性 */
+      background-color: rgba(0, 0, 0, 0.4);
       border-radius: 50px;
       backdrop-filter: blur(4px);
+    }
+    body.light-mode .home-link {
+      background-color: rgba(0, 0, 0, 0.1);
+      color: var(--text-primary-light);
     }
     .home-link:hover {
       background-color: var(--color-accent);
@@ -232,7 +282,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     .home-link::after {
-      display: none; /* 移除下划线效果，改用背景色变化 */
+      display: none;
     }
     /* 预约页面样式 */
     .booking-container {
@@ -508,7 +558,7 @@
       display: flex;
       align-items: center;
     }
-    /* 会议日程页面样式 - 重点修复浅色模式下的背景色 */
+    /* 会议日程页面样式 */
     .bg-darker {
       background-color: var(--color-darker);
       transition: background-color 0.3s ease;
@@ -523,19 +573,119 @@
     body.light-mode .bg-light {
       background-color: var(--color-light-light);
     }
+    
+    /* 新增：会议室状态页面样式 */
+    .rooms-container {
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .room-card {
+      background-color: var(--bg-card);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      border-left: 5px solid transparent;
+    }
+    body.light-mode .room-card {
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .room-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .room-status {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .status-available {
+      background-color: rgba(72, 187, 120, 0.2);
+      color: #48BB78;
+      border-left-color: #48BB78;
+    }
+    .status-occupied {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #EF4444;
+      border-left-color: #EF4444;
+    }
+    .room-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .room-info {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    body.light-mode .room-info {
+      border-top-color: rgba(0,0,0,0.1);
+    }
+    .room-details {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .room-capacity {
+      display: flex;
+      align-items: center;
+    }
+    .room-capacity i {
+      margin-right: 0.5rem;
+      color: var(--color-accent);
+    }
   </style>
 </head>
 <body>
-  <!-- 主页面 - 图片满铺且选项避开文字 -->
+  <!-- 主页面 -->
   <div id="homePage" class="page active">
     <div class="home-container">
-      <!-- 顶部标题区域 -->
+      <!-- 标题区域 - 调整样式使长短视觉一致，o字母居中 -->
       <div class="home-top">
-        <h1 class="home-title text-7xl md:text-10xl font-bold">MUSEPoD</h1>
-        <p class="home-subtitle text-2xl md:text-3xl">ENJOY YOUR MEETINGS</p>
+        <h1 class="home-title">
+          M<span class="o-letter">U</span>SE<span class="o-letter">P</span>OD
+        </h1>
+        <p class="home-subtitle">ENJOY MEETINGS</p>
       </div>
       
-      <!-- 底部功能选项区域（避开图片中间文字） -->
+      <!-- 中间魔方图标 - 现代简约风格 -->
+      <div class="cube-container">
+        <div class="cube">
+          <div class="cube-face cube-front">
+            <div class="cube-dot"></div>
+            <div class="cube-dot"></div>
+            <div class="cube-dot"></div>
+            <div class="cube-dot"></div>
+          </div>
+          <div class="cube-face cube-back"></div>
+          <div class="cube-face cube-right">
+            <div class="cube-dot"></div>
+            <div class="cube-dot"></div>
+            <div class="cube-dot"></div>
+          </div>
+          <div class="cube-face cube-left"></div>
+          <div class="cube-face cube-top">
+            <div class="cube-dot"></div>
+            <div class="cube-dot"></div>
+            <div class="cube-dot"></div>
+          </div>
+          <div class="cube-face cube-bottom"></div>
+        </div>
+      </div>
+      
+      <!-- 功能选项区域 -->
       <div class="home-links-container">
         <div class="home-links">
           <div class="home-link" onclick="navigateTo('meetingRoomPage')">
@@ -547,20 +697,20 @@
           <div class="home-link" onclick="navigateTo('controlsPage')">
             <i class="fas fa-sliders-h mr-2"></i>Room Controls
           </div>
-          <div class="home-link" onclick="showFindRoomFeature()">
+          <div class="home-link" onclick="navigateTo('findRoomPage')">
             <i class="fas fa-search mr-2"></i>Find Room
           </div>
         </div>
       </div>
       
-      <!-- 主题切换按钮（右上角，不遮挡内容） -->
+      <!-- 主题切换按钮 -->
       <div class="theme-toggle" id="themeToggleHome">
         <i class="fas fa-moon text-white" id="themeIconHome"></i>
       </div>
     </div>
   </div>
 
-  <!-- 会议室页面（Meeting Schedule） -->
+  <!-- 会议室日程页面 -->
   <div id="meetingRoomPage" class="page">
     <div class="p-6 lg:p-10 max-w-7xl mx-auto">
       <!-- 页面头部 -->
@@ -662,7 +812,7 @@
     </div>
   </div>
 
-  <!-- 会议预约页面（全英文） -->
+  <!-- 会议预约页面 -->
   <div id="bookingPage" class="page">
     <div class="booking-container p-6 lg:p-10 max-w-7xl mx-auto">
       <div class="booking-header">
@@ -905,6 +1055,113 @@
     </div>
   </div>
 
+  <!-- 新增：Find Room页面 - 显示每个会议室的使用情况 -->
+  <div id="findRoomPage" class="page">
+    <div class="rooms-container p-6 lg:p-10 max-w-7xl mx-auto">
+      <!-- 页面头部 -->
+      <div class="page-header">
+        <div class="header-content">
+          <i class="fas fa-arrow-left text-accent mr-3 back-arrow text-xl" onclick="navigateTo('homePage')"></i>
+          <h1 class="page-title">Room Availability</h1>
+        </div>
+        <!-- 主题切换按钮 -->
+        <div class="theme-toggle" id="themeToggleFindRoom">
+          <i class="fas fa-moon text-accent" id="themeIconFindRoom"></i>
+        </div>
+      </div>
+      
+      <p class="text-gray-400 mb-8">Current status of all meeting rooms as of <span id="current-time">10:30 AM</span></p>
+      
+      <!-- 会议室状态网格 -->
+      <div class="rooms-grid">
+        <!-- 会议室1 -->
+        <div class="room-card status-occupied">
+          <span class="room-status">Occupied</span>
+          <h3 class="room-name">Conference Room 1</h3>
+          <p class="text-gray-400">Until 11:00 AM</p>
+          <div class="room-info">
+            <div class="room-details">
+              <span>Current Meeting:</span>
+              <span>Marketing Strategy</span>
+            </div>
+            <div class="room-capacity">
+              <i class="fas fa-users"></i>
+              <span>Up to 12 people</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 会议室2 -->
+        <div class="room-card status-available">
+          <span class="room-status">Available Now</span>
+          <h3 class="room-name">Conference Room 2</h3>
+          <p class="text-gray-400">Next booking: 2:00 PM</p>
+          <div class="room-info">
+            <div class="room-details">
+              <span>Equipment:</span>
+              <span>Projector, VC</span>
+            </div>
+            <div class="room-capacity">
+              <i class="fas fa-users"></i>
+              <span>Up to 8 people</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 高管套房 -->
+        <div class="room-card status-occupied">
+          <span class="room-status">Occupied</span>
+          <h3 class="room-name">Executive Suite</h3>
+          <p class="text-gray-400">Until 1:30 PM</p>
+          <div class="room-info">
+            <div class="room-details">
+              <span>Current Meeting:</span>
+              <span>Executive Team</span>
+            </div>
+            <div class="room-capacity">
+              <i class="fas fa-users"></i>
+              <span>Up to 6 people</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 会议舱A -->
+        <div class="room-card status-available">
+          <span class="room-status">Available Now</span>
+          <h3 class="room-name">Meeting Pod A</h3>
+          <p class="text-gray-400">Next booking: 3:30 PM</p>
+          <div class="room-info">
+            <div class="room-details">
+              <span>Equipment:</span>
+              <span>Video Call</span>
+            </div>
+            <div class="room-capacity">
+              <i class="fas fa-users"></i>
+              <span>Up to 4 people</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 会议舱B -->
+        <div class="room-card status-occupied">
+          <span class="room-status">Occupied</span>
+          <h3 class="room-name">Meeting Pod B</h3>
+          <p class="text-gray-400">Until 12:30 PM</p>
+          <div class="room-info">
+            <div class="room-details">
+              <span>Current Meeting:</span>
+              <span>1:1 Discussion</span>
+            </div>
+            <div class="room-capacity">
+              <i class="fas fa-users"></i>
+              <span>Up to 2 people</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 会议详情模态框 -->
   <div class="modal" id="eventModal">
     <div class="modal-overlay" id="modalOverlay"></div>
@@ -962,9 +1219,22 @@
       document.body.style.overflow = '';
     }
 
-    // 显示找房间功能
-    function showFindRoomFeature() {
-      alert('Room finding feature: Currently available rooms - Conference Room 2 and Meeting Pod A');
+    // 更新当前时间显示
+    function updateCurrentTime() {
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      // 转换为12小时制
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 0 应显示为 12
+      
+      // 补零
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      
+      const currentTimeString = `${hours}:${minutes} ${ampm}`;
+      document.getElementById('current-time').textContent = currentTimeString;
     }
 
     // 会议详情数据
@@ -1084,27 +1354,35 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+      // 更新当前时间并每分钟更新一次
+      updateCurrentTime();
+      setInterval(updateCurrentTime, 60000);
+      
       // 主题切换功能
       const themeToggles = [
         document.getElementById('themeToggleHome'),
         document.getElementById('themeToggleSchedule'),
         document.getElementById('themeToggleBooking'),
-        document.getElementById('themeToggleControls')
+        document.getElementById('themeToggleControls'),
+        document.getElementById('themeToggleFindRoom') // 新增Find Room页面的主题切换
       ];
       
       const themeIcons = [
         document.getElementById('themeIconHome'),
         document.getElementById('themeIconSchedule'),
         document.getElementById('themeIconBooking'),
-        document.getElementById('themeIconControls')
+        document.getElementById('themeIconControls'),
+        document.getElementById('themeIconFindRoom') // 新增Find Room页面的主题图标
       ];
       
       // 检查本地存储中的主题偏好
       if (localStorage.getItem('lightMode') === 'true') {
         document.body.classList.add('light-mode');
         themeIcons.forEach(icon => {
-          icon.classList.remove('fa-moon');
-          icon.classList.add('fa-sun');
+          if (icon) {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+          }
         });
       }
       
@@ -1116,12 +1394,14 @@
             const isLightMode = document.body.classList.contains('light-mode');
             
             // 更新图标
-            if (isLightMode) {
-              themeIcons[index].classList.remove('fa-moon');
-              themeIcons[index].classList.add('fa-sun');
-            } else {
-              themeIcons[index].classList.remove('fa-sun');
-              themeIcons[index].classList.add('fa-moon');
+            if (themeIcons[index]) {
+              if (isLightMode) {
+                themeIcons[index].classList.remove('fa-moon');
+                themeIcons[index].classList.add('fa-sun');
+              } else {
+                themeIcons[index].classList.remove('fa-sun');
+                themeIcons[index].classList.add('fa-moon');
+              }
             }
             
             // 保存主题偏好

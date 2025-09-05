@@ -152,7 +152,7 @@
       background: var(--color-accent);
       border-radius: 3px;
     }
-    /* 主页面样式 - 移除背景图片，调整标题，添加魔方图标 */
+    /* 主页面样式 */
     .home-container {
       height: 100vh;
       display: flex;
@@ -163,7 +163,7 @@
       text-align: center;
       position: relative;
     }
-    /* 标题样式调整 - 确保长短视觉一致，o字母居中 */
+    /* 标题样式调整 */
     .home-title {
       letter-spacing: 0.25rem;
       margin: 0 0 1rem 0;
@@ -175,7 +175,7 @@
       font-size: clamp(5rem, 15vw, 9rem);
       position: relative;
     }
-    /* 特别调整字母o的位置，确保视觉居中 */
+    /* 特别调整字母位置，确保视觉居中 */
     .home-title span.o-letter {
       position: relative;
       margin: 0 0.05em;
@@ -190,60 +190,63 @@
     /* 魔方图标容器 */
     .cube-container {
       margin: 2rem 0 4rem 0;
-      perspective: 800px;
+      perspective: 1000px;
     }
-    /* 现代简约风格魔方图标 */
+    /* 传统三阶魔方样式 - 红蓝白三色九宫格 */
     .cube {
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
       position: relative;
       transform-style: preserve-3d;
-      transform: rotateX(45deg) rotateY(45deg);
-      animation: spin 8s infinite linear;
+      animation: rotateCube 15s infinite ease-in-out;
+      transform: rotateX(30deg) rotateY(30deg);
     }
-    @keyframes spin {
-      0% { transform: rotateX(45deg) rotateY(45deg); }
-      100% { transform: rotateX(45deg) rotateY(405deg); }
+    @keyframes rotateCube {
+      0% { transform: rotateX(30deg) rotateY(30deg); }
+      25% { transform: rotateX(30deg) rotateY(405deg); }
+      50% { transform: rotateX(390deg) rotateY(405deg); }
+      75% { transform: rotateX(390deg) rotateY(750deg); }
+      100% { transform: rotateX(750deg) rotateY(750deg); }
     }
     .cube-face {
       position: absolute;
-      width: 120px;
-      height: 120px;
-      background-color: rgba(79, 155, 255, 0.8);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      width: 150px;
+      height: 150px;
+      border: 2px solid #333;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
     }
-    body.light-mode .cube-face {
-      background-color: rgba(79, 155, 255, 0.7);
-      border-color: rgba(0, 0, 0, 0.1);
+    /* 魔方各面颜色 - 传统配色方案 */
+    .cube-front { 
+      transform: translateZ(75px); 
+      background-color: #0055FF; /* 蓝色 */
     }
-    .cube-front { transform: translateZ(60px); }
-    .cube-back { transform: rotateY(180deg) translateZ(60px); }
-    .cube-right { transform: rotateY(90deg) translateZ(60px); }
-    .cube-left { transform: rotateY(-90deg) translateZ(60px); }
-    .cube-top { transform: rotateX(90deg) translateZ(60px); }
-    .cube-bottom { transform: rotateX(-90deg) translateZ(60px); }
-    /* 魔方上的小方块 */
-    .cube-dot {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      background-color: rgba(255, 255, 255, 0.2);
+    .cube-back { 
+      transform: rotateY(180deg) translateZ(75px); 
+      background-color: #00AA00; /* 绿色 */
     }
-    .cube-front .cube-dot:nth-child(1) { top: 15px; left: 15px; }
-    .cube-front .cube-dot:nth-child(2) { top: 15px; right: 15px; }
-    .cube-front .cube-dot:nth-child(3) { bottom: 15px; left: 15px; }
-    .cube-front .cube-dot:nth-child(4) { bottom: 15px; right: 15px; }
-    
-    .cube-right .cube-dot:nth-child(1) { top: 15px; left: 15px; }
-    .cube-right .cube-dot:nth-child(2) { top: 15px; right: 15px; }
-    .cube-right .cube-dot:nth-child(3) { bottom: 15px; left: 15px; }
-    
-    .cube-top .cube-dot:nth-child(1) { top: 15px; right: 15px; }
-    .cube-top .cube-dot:nth-child(2) { bottom: 15px; left: 15px; }
-    .cube-top .cube-dot:nth-child(3) { bottom: 15px; right: 15px; }
+    .cube-right { 
+      transform: rotateY(90deg) translateZ(75px); 
+      background-color: #FF3333; /* 红色 */
+    }
+    .cube-left { 
+      transform: rotateY(-90deg) translateZ(75px); 
+      background-color: #FF9900; /* 橙色 */
+    }
+    .cube-top { 
+      transform: rotateX(90deg) translateZ(75px); 
+      background-color: #FFFFFF; /* 白色 */
+    }
+    .cube-bottom { 
+      transform: rotateX(-90deg) translateZ(75px); 
+      background-color: #FFFF00; /* 黄色 */
+    }
+    /* 九宫格小方块 - 添加黑色边框分隔 */
+    .cube-cell {
+      border: 1px solid #333;
+      box-sizing: border-box;
+    }
 
     /* 功能选项样式 */
     .home-links-container {
@@ -574,7 +577,7 @@
       background-color: var(--color-light-light);
     }
     
-    /* 新增：会议室状态页面样式 */
+    /* 会议室状态页面样式 */
     .rooms-container {
       min-height: 100vh;
       padding: 2rem;
@@ -652,7 +655,7 @@
   <!-- 主页面 -->
   <div id="homePage" class="page active">
     <div class="home-container">
-      <!-- 标题区域 - 调整样式使长短视觉一致，o字母居中 -->
+      <!-- 标题区域 -->
       <div class="home-top">
         <h1 class="home-title">
           M<span class="o-letter">U</span>SE<span class="o-letter">P</span>OD
@@ -660,28 +663,86 @@
         <p class="home-subtitle">ENJOY MEETINGS</p>
       </div>
       
-      <!-- 中间魔方图标 - 现代简约风格 -->
+      <!-- 中间魔方图标 - 传统红蓝白三色九宫格样式 -->
       <div class="cube-container">
         <div class="cube">
+          <!-- 前面 (蓝色) -->
           <div class="cube-face cube-front">
-            <div class="cube-dot"></div>
-            <div class="cube-dot"></div>
-            <div class="cube-dot"></div>
-            <div class="cube-dot"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
           </div>
-          <div class="cube-face cube-back"></div>
+          
+          <!-- 后面 (绿色) -->
+          <div class="cube-face cube-back">
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+          </div>
+          
+          <!-- 右面 (红色) -->
           <div class="cube-face cube-right">
-            <div class="cube-dot"></div>
-            <div class="cube-dot"></div>
-            <div class="cube-dot"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
           </div>
-          <div class="cube-face cube-left"></div>
+          
+          <!-- 左面 (橙色) -->
+          <div class="cube-face cube-left">
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+          </div>
+          
+          <!-- 上面 (白色) -->
           <div class="cube-face cube-top">
-            <div class="cube-dot"></div>
-            <div class="cube-dot"></div>
-            <div class="cube-dot"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
           </div>
-          <div class="cube-face cube-bottom"></div>
+          
+          <!-- 下面 (黄色) -->
+          <div class="cube-face cube-bottom">
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+            <div class="cube-cell"></div>
+          </div>
         </div>
       </div>
       
@@ -1055,7 +1116,7 @@
     </div>
   </div>
 
-  <!-- 新增：Find Room页面 - 显示每个会议室的使用情况 -->
+  <!-- Find Room页面 -->
   <div id="findRoomPage" class="page">
     <div class="rooms-container p-6 lg:p-10 max-w-7xl mx-auto">
       <!-- 页面头部 -->
@@ -1364,7 +1425,7 @@
         document.getElementById('themeToggleSchedule'),
         document.getElementById('themeToggleBooking'),
         document.getElementById('themeToggleControls'),
-        document.getElementById('themeToggleFindRoom') // 新增Find Room页面的主题切换
+        document.getElementById('themeToggleFindRoom')
       ];
       
       const themeIcons = [
@@ -1372,7 +1433,7 @@
         document.getElementById('themeIconSchedule'),
         document.getElementById('themeIconBooking'),
         document.getElementById('themeIconControls'),
-        document.getElementById('themeIconFindRoom') // 新增Find Room页面的主题图标
+        document.getElementById('themeIconFindRoom')
       ];
       
       // 检查本地存储中的主题偏好

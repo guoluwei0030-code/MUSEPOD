@@ -15,14 +15,14 @@
       --color-light: #4A4A5F;    /* 右侧浅色背景 */
       --color-accent: #4F9BFF;   /* 强调色（蓝色） */
       --color-overlay: rgba(0, 0, 0, 0.7); /* 模态框背景 */
-      --font-sans: 'Helvetica Neue', Arial, sans-serif; /* 匹配参考字体 */
+      --font-sans: 'Helvetica Neue', Arial, sans-serif;
     }
     @utility smooth-transition {
       transition: all 0.3s ease-in-out;
     }
     body {
       font-family: var(--font-sans);
-      background-color: #1A202C; /* 匹配参考图深蓝色背景 */
+      background-color: #1A202C;
       color: white;
       overflow-x: hidden;
     }
@@ -102,27 +102,30 @@
       text-align: center;
     }
     .home-title {
-      letter-spacing: 0.35rem; /* 精确匹配参考图间距 */
+      letter-spacing: 0.35rem;
       margin-bottom: 3rem;
       cursor: pointer;
       transition: transform 0.3s ease;
-      line-height: 1; /* 确保字母基线对齐 */
-      display: inline-block; /* 保持行内元素特性 */
-      font-weight: 500; /* 匹配参考图字重 */
+      line-height: 1;
+      font-weight: 500;
+      text-align: center; /* 确保水平居中 */
+      width: 100%; /* 确保占据全屏宽度以实现水平居中 */
     }
     .home-title:hover {
       transform: scale(1.05);
     }
     .home-subtitle {
       letter-spacing: 0.2rem;
-      margin-bottom: 4rem;
+      margin-bottom: 6rem;
       font-weight: 300;
     }
     .home-links {
       display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+      flex-direction: row; /* 横向排列 */
+      gap: 4rem; /* 增加间距 */
       margin-top: 2rem;
+      flex-wrap: wrap; /* 小屏幕自动换行 */
+      justify-content: center; /* 水平居中 */
     }
     .home-link {
       color: var(--color-accent);
@@ -131,6 +134,8 @@
       transition: all 0.3s ease;
       position: relative;
       padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
     }
     .home-link:hover {
       color: white;
@@ -149,22 +154,101 @@
     .home-link:hover::after {
       width: 100%;
     }
+    /* 预约页面样式 */
+    .booking-container {
+      height: 100vh;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .booking-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+    .booking-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-left: 1rem;
+    }
+    .booking-form {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 10px;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background-color: var(--color-accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #3a88e6;
+    }
   </style>
 </head>
 <body>
   <!-- 主页面 -->
   <div id="homePage" class="page active">
     <div class="home-container">
-      <!-- MUSEPoD 标题（o为小写，垂直居中匹配参考图） -->
-      <h1 class="home-title text-7xl md:text-10xl font-bold">MUSEPoD</h1>
+      <!-- MUSEPoD 标题（更大字体，水平居中） -->
+      <h1 class="home-title text-8xl md:text-12xl font-bold">MUSEPoD</h1>
       <p class="home-subtitle text-2xl md:text-3xl">ENJOY YOUR MEETINGS</p>
       
-      <!-- 三个功能链接 -->
+      <!-- 三个功能链接横向排列 -->
       <div class="home-links">
         <div class="home-link" onclick="navigateTo('meetingRoomPage')">
           <i class="fas fa-calendar-alt mr-2"></i>Meeting Schedule
         </div>
-        <div class="home-link" onclick="showBookingFeature()">
+        <div class="home-link" onclick="navigateTo('bookingPage')">
           <i class="fas fa-bookmark mr-2"></i>Meeting Booking
         </div>
         <div class="home-link" onclick="showFindRoomFeature()">
@@ -259,6 +343,98 @@
             <p class="text-gray-300">6:30 PM - 7:00 PM</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 会议预约页面（全英文） -->
+  <div id="bookingPage" class="page">
+    <div class="booking-container">
+      <div class="booking-header">
+        <i class="fas fa-arrow-left text-accent text-xl back-arrow" onclick="navigateTo('homePage')"></i>
+        <h1 class="booking-title">Book a Meeting Room</h1>
+      </div>
+      
+      <div class="booking-form">
+        <form id="meetingBookingForm">
+          <div class="form-group">
+            <label class="form-label">Meeting Title</label>
+            <input type="text" class="form-input" placeholder="Enter meeting title" required>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Meeting Room</label>
+              <select class="form-select" required>
+                <option value="">Select a room</option>
+                <option value="conf1">Conference Room 1</option>
+                <option value="conf2">Conference Room 2</option>
+                <option value="conf3">Executive Suite</option>
+                <option value="conf4">Meeting Pod A</option>
+                <option value="conf5">Meeting Pod B</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Start Time</label>
+              <input type="time" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">End Time</label>
+              <input type="time" class="form-input" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Number of Attendees</label>
+            <select class="form-select" required>
+              <option value="">Select number</option>
+              <option value="1-5">1-5 people</option>
+              <option value="6-10">6-10 people</option>
+              <option value="11-20">11-20 people</option>
+              <option value="21+">21+ people</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Attendees (Email)</label>
+            <textarea class="form-textarea" rows="3" placeholder="Enter email addresses separated by commas"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Meeting Description</label>
+            <textarea class="form-textarea" rows="4" placeholder="Enter meeting purpose or agenda"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Additional Equipment</label>
+            <div class="flex flex-wrap gap-3 mt-2">
+              <label class="flex items-center">
+                <input type="checkbox" class="mr-2"> Projector
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" class="mr-2"> Video Conference
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" class="mr-2"> Whiteboard
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" class="mr-2"> Conference Phone
+              </label>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="navigateTo('homePage')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Book Meeting Room</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -400,11 +576,6 @@
       document.body.style.overflow = '';
     }
 
-    // 显示预订功能（示例）
-    function showBookingFeature() {
-      alert('Meeting booking feature will be available soon!');
-    }
-
     // 显示找房间功能（示例）
     function showFindRoomFeature() {
       alert('Room finding feature will be available soon!');
@@ -413,6 +584,14 @@
     document.addEventListener('DOMContentLoaded', () => {
       // 为主标题添加点击事件
       document.querySelector('.home-title').addEventListener('click', () => {
+        navigateTo('meetingRoomPage');
+      });
+      
+      // 处理会议预约表单提交
+      const bookingForm = document.getElementById('meetingBookingForm');
+      bookingForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Meeting room booked successfully!');
         navigateTo('meetingRoomPage');
       });
       

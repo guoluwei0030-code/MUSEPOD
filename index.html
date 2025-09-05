@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conference Room 1</title>
+  <!-- 引入 Tailwind CSS（浏览器版） -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <!-- 引入 Font Awesome（图标库） -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <style type="text/tailwindcss">
+    @theme {
+      --color-dark: #1E1E2E;     /* 左侧深色背景 */
+      --color-darker: #12121F;   /* 左侧更深色区域 */
+      --color-light: #4A4A5F;    /* 右侧浅色背景 */
+      --color-accent: #4F9BFF;   /* 强调色（蓝色） */
+      --font-inter: 'Inter', sans-serif; /* 字体（可替换为实际字体） */
+    }
+    @utility smooth-transition {
+      transition: all 0.3s ease-in-out;
+    }
+    body {
+      font-family: var(--font-inter);
+      background-color: var(--color-dark);
+      color: white;
+    }
+    /* 日程项样式：默认左边框透明，激活时显示蓝色 */
+    .schedule-item {
+      border-left: 3px solid transparent;
+    }
+    .schedule-item.active {
+      border-left-color: var(--color-accent);
+    }
+    /* 日程项 hover 效果 */
+    .schedule-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      @apply smooth-transition;
+    }
+    /* QR 码 hover 缩放效果 */
+    .qr-code:hover {
+      transform: scale(1.05);
+      @apply smooth-transition;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="flex flex-col md:flex-row p-4">
+    <!-- 左侧面板：当前会议信息 -->
+    <div class="w-full md:w-1/2 bg-darker p-6 rounded-lg mb-6 md:mb-0 md:rounded-l-lg">
+      <!-- 返回箭头 + 时间 -->
+      <div class="flex items-center mb-4">
+        <i class="fas fa-arrow-left text-accent mr-2"></i>
+        <span class="text-lg font-semibold">10:00 AM</span>
+      </div>
+      <h1 class="text-2xl font-bold mb-6">Conference Room 1</h1>
+      
+      <!-- 会议状态 + 时间 + 主题 -->
+      <div class="mb-8">
+        <span class="text-accent text-lg font-medium">Occupied</span>
+        <h2 class="text-4xl font-bold mt-4">10:00 <span class="text-xl">AM</span></h2>
+        <p class="text-gray-400 mt-2">August 20, 2025</p>
+        <hr class="border-yellow-400 my-6">
+        <h3 class="text-2xl font-semibold">Q3 Marketing Strategy Session</h3>
+      </div>
+      
+      <!-- 参会者信息 -->
+      <div class="mb-6">
+        <div class="flex items-center mb-3">
+          <i class="fas fa-user-circle text-gray-400 mr-3"></i>
+          <div>
+            <p class="font-medium">Presenter: Samantha Lee</p>
+            <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <i class="fas fa-user-circle text-gray-400 mr-3"></i>
+          <div>
+            <p class="font-medium">John Chen</p>
+            <p class="text-gray-400 text-sm">9:00 - 11:00 AM</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- QR 码（带交互效果） -->
+      <div class="bg-white/10 p-4 rounded-lg text-center">
+        <img 
+          src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=checkin_extend_conference1" 
+          alt="QR Code" 
+          class="qr-code mx-auto mb-2"
+        >
+        <p class="text-sm text-gray-300">Scan to check-in or extend</p>
+      </div>
+    </div>
+    
+    <!-- 右侧面板：今日日程 -->
+    <div class="w-full md:w-1/2 bg-light p-6 rounded-lg md:rounded-r-lg">
+      <h2 class="text-2xl font-bold mb-6">Today's Schedule</h2>
+      
+      <div class="space-y-4">
+        <!-- 日程项 1：Project Alpha Review -->
+        <div class="schedule-item active p-3 rounded-lg" data-event="project-alpha">
+          <h3 class="font-semibold">Project Alpha Review</h3>
+          <p class="text-gray-300 text-sm">11:00 AM - 12:00 PM</p>
+        </div>
+        
+        <!-- 日程项 2：Client Pitch Prep -->
+        <div class="schedule-item p-3 rounded-lg" data-event="client-pitch">
+          <h3 class="font-semibold">Client Pitch Prep</h3>
+          <p class="text-gray-300 text-sm">1:00 PM - 2:00 PM - Sarah Kim</p>
+        </div>
+        
+        <!-- 日程项 3：Team Sync Up -->
+        <div class="schedule-item p-3 rounded-lg" data-event="team-sync">
+          <h3 class="font-semibold">Team Sync Up</h3>
+          <p class="text-gray-300 text-sm">2:30 PM - Michael Wu</p>
+        </div>
+        
+        <!-- 日程项 4：Future Initiatives -->
+        <div class="schedule-item p-3 rounded-lg" data-event="future-initiatives">
+          <h3 class="font-semibold">Future Initiatives</h3>
+          <p class="text-gray-300 text-sm">4:00 PM - 5:00 PM</p>
+        </div>
+        
+        <!-- 日程项 5：Sales Training -->
+        <div class="schedule-item active p-3 rounded-lg" data-event="sales-training">
+          <h3 class="font-semibold">Sales Training</h3>
+          <p class="text-gray-300 text-sm">6:30 PM - 7:00 PM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. 日程项交互：点击切换“激活状态”
+      const scheduleItems = document.querySelectorAll('.schedule-item');
+      
+      scheduleItems.forEach(item => {
+        item.addEventListener('click', () => {
+          // 移除所有项的“激活”样式
+          scheduleItems.forEach(i => i.classList.remove('active'));
+          // 为点击的项添加“激活”样式
+          item.classList.add('active');
+          
+          // （可选）点击后可执行其他逻辑，如：显示详情、切换左侧会议内容等
+          const eventId = item.dataset.event;
+          console.log(`Clicked event: ${eventId}`);
+        });
+      });
+      
+      // 2. QR 码交互：hover 时缩放
+      const qrCode = document.querySelector('.qr-code');
+      qrCode.addEventListener('mouseenter', () => {
+        qrCode.classList.add('scale-105');
+      });
+      qrCode.addEventListener('mouseleave', () => {
+        qrCode.classList.remove('scale-105');
+      });
+    });
+  </script>
+</body>
+</html>
